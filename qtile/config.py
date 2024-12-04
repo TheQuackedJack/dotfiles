@@ -1,50 +1,31 @@
 # ~/.config/qtile/config.py
 
-from libqtile import qtile
-from libqtile.config import Click, Drag
-from libqtile.lazy import lazy
+import json
+from jsonschema import validate
+from groups import create_groups, create_group_keys, create_rules
 
-# Import configurations from modules
-from config import (
-    mod,
-    terminal,
-    follow_mouse_focus,
-    bring_front_click,
-    cursor_warp,
-    auto_fullscreen,
-    focus_on_window_activation,
-    reconfigure_screens,
-    auto_minimize,
-    wl_xcursor_theme,
-    wl_xcursor_size,
-    widget_defaults,
-    extension_defaults,
-)
-from config.keys import keys
-from config.groups import groups
-from config.layouts import layouts, floating_layout
-from config.mouse import mouse
-from config.screens import screens
-from config.widgets import widgets
+# Load schema-config mapping
+def load_mapping():
+    with open("~/.config/qtile/config_mapping.json", "r") as mapping_file:
+        return json.load(mapping_file)
 
-# Additional configurations
-dgroups_key_binder = None
-dgroups_app_rules = []
+# Validate configurations
+def validate_configs(mapping):
+    validated_data = {}
+    for name, paths in mapping.items():
+        with open(paths["schema"], "r") as schema_file:
+            schema = json.load(schema_file)
+        with open(paths["config"], "r") as config_file:
+            config_data = json.load(config_file)
+        validate(instance=config_data, schema=schema)
+        validated_data[name] = config_data
+    return validated_data
 
-# Uncomment the following line if you use dgroups
-# main = None
+# Load and validate configs
+mapping = load_mapping()
+configs = validate_configs(mapping)
 
-# Set focus behavior
-# focus_on_window_activation = "smart"  # Already imported from config.__init__
-
-# Auto-minimize behavior
-# auto_minimize = True  # Already imported from config.__init__
-
-# When using the Wayland backend, this can be used to configure input devices.
-wl_input_rules = None
-
-# Startup hooks (if any)
-# from libqtile import hook
-# @hook.subscribe.startup
-# def autostart():
-#     # Your startup applications here
+# Retrieve groups, keys, and rules
+groups = create_groups(configs["groups"])
+group_keys = create_group_keys(configs["groups"])
+rules = create_rules(configs["groups"])

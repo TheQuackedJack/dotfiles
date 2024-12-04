@@ -1,0 +1,43 @@
+{
+  "groups": [
+    {
+      "name": "code",
+      "matches": [
+        { "wm_class": "code" }
+      ],
+      "layout": "max",
+      "rules": [
+        {
+          "match": [{ "wm_class": "code" }],
+          "float": true
+        }
+      ]
+    },
+    {
+      "name": "web",
+      "matches": [
+        { "wm_class": "firefox" },
+        { "wm_class": "chrome" }
+      ],
+      "rules": []
+    },
+    {
+      "name": "chat",
+      "matches": [
+        { "wm_class": "slack" },
+        { "wm_class": "discord" }
+      ],
+      "rules": [
+        {
+          "match": [{ "wm_class": "slack" }],
+          "float": true
+        }
+      ]
+    },
+    {
+      "name": "default",
+      "matches": [],
+      "rules": []
+    }
+  ]
+}

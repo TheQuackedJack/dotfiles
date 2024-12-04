@@ -1,6 +1,0 @@
-{
-  "groups": {
-    "schema": "~/.config/qtile/static/groups_schema.json",
-    "config": "~/.config/qtile/groups/groups.json"
-  }
-}
